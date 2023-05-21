@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: EnemyConfig
   m_EditorClassIdentifier: 
   health: 100
-  speed: 4
+  speed: 0.5
   damage: 1
+  detectionRange: 3
+  wanderingMinTime: 2
+  wanderingMaxTime: 5
+  idleMinTime: 2
+  idleMaxTime: 3

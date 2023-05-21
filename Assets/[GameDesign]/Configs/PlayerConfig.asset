@@ -15,4 +15,4 @@ MonoBehaviour:
   health: 100
   speed: 5
   damage: 5
-  rateOfFire: 1
+  rateOfFire: 0.8
