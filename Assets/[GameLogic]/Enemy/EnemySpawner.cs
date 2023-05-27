@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-public class EnemySpawner : MonoBehaviour
+public sealed class EnemySpawner : MonoBehaviour
 {
-    public float wait = 0;
+    public static EnemySpawner Instance;
+    
+    [SerializeField] private Transform spawnPosition;
+    [SerializeField] private float wait = 0;
 
     private GameConfig _gameConfig;
 
@@ -15,14 +15,19 @@ public class EnemySpawner : MonoBehaviour
     {
         _gameConfig = gameConfig;
     }
-    
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Update()
     {
         if (EnemyPooler.Instance.aliveEnemies.Count < _gameConfig.gameSettings.maxEnemySpawn)
         {
             if (GameStates.state == GameStates.State.GameStart && wait <= 0)
             {
-                EnemyPooler.Instance.SpawnEnemies(1);
+                EnemyPooler.Instance.SpawnEnemies(1, spawnPosition.position);
                 wait = _gameConfig.gameSettings.spawnTimer;
             }
             else
@@ -30,5 +35,10 @@ public class EnemySpawner : MonoBehaviour
                 wait -= Time.deltaTime;
             }
         }
+    }
+
+    public Vector3 GetSpawnPoint()
+    {
+        return spawnPosition.position;
     }
 }

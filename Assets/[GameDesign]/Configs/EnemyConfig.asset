@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speed: 0.5
-  damage: 1
-  detectionRange: 3
+  damage: 5
+  attackSpeed: 2
+  attackRange: 1.5
+  detectionRange: 4
   wanderingMinTime: 2
   wanderingMaxTime: 5
   idleMinTime: 2
   idleMaxTime: 3
+  wanderOffset: 5
+  spawnOffset: 10

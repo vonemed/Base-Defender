@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -35,12 +33,12 @@ namespace Bullet
                     return;
                 }
                 
-                var direction = _target.gameObject.transform.position - transform.position;
+                var direction = (_target.gameObject.transform.position + Vector3.up) - transform.position;
                 transform.Translate(direction.normalized * (_bulletConfig.speed * Time.deltaTime), Space.World);
                 transform.LookAt(_target.transform, Vector3.up);
                 // transform.rotation = Quaternion.LookRotation (direction);
 
-                if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= 0.6f)
+                if (Vector3.Distance(transform.position, _target.gameObject.transform.position + Vector3.up) <= 0.8f)
                 {
                     Hit();
                 }
@@ -55,6 +53,7 @@ namespace Bullet
 
         public void Hit()
         {
+            VisualEffectsPooler.Instance.SpawnVisualEffect(transform.position);
             Debug.Log("Hit");
             _target.TakeDamage(_damage);
             KillBullet();

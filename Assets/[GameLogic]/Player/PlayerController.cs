@@ -2,19 +2,20 @@ using System;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Zenject;
+using Zenject.SpaceFighter;
 
 namespace Player
 {
     public sealed class PlayerController : MonoBehaviour
     {
         public static PlayerController Player;
-        //TODO: move it to config
-        //temp
+
+        public PlayerStates playerState;
         public float reload;
-        
+
         private FixedJoystick _joystick;
         public PlayerConfig _playerConfig;
-        private PlayerMovement _movement;
+        [SerializeField] private Animator animator;
         
         //Visuals
         public UnityEngine.UI.Image healthBar;
@@ -22,26 +23,58 @@ namespace Player
         public int health;
         //TODO: Add separate respawn class to handle  this later
         public Vector3 respawnPos;
-        //Player stats
-        //Player combat
         
+        public enum PlayerStates
+        {
+            Idle,
+            Moving,
+            Shooting,
+            Dying
+        }
+
         [Inject]
-        public void Constructor(FixedJoystick fixedJoystick, PlayerMovement movement, PlayerConfig playerConfig)
+        public void Constructor(FixedJoystick fixedJoystick, PlayerConfig playerConfig)
         {
             Player = this;
             
             _joystick = fixedJoystick;
             _playerConfig = playerConfig;
-            _movement = movement;
 
             reload = _playerConfig.rateOfFire;
             health = _playerConfig.health;
             healthBar.fillAmount = health / 100f;
+
+            playerState = PlayerStates.Idle;
         }
 
         private void Update()
         {
-            transform.Translate(new Vector3(-(_joystick.Direction.x * (_playerConfig.speed * Time.deltaTime)), 0, -(_joystick.Direction.y * (_playerConfig.speed * Time.deltaTime))));
+            if (_joystick.Horizontal != 0 || _joystick.Vertical != 0)
+            {
+               
+                animator.Play("Running");
+                Vector3 moveVector = new Vector3(-(_joystick.Horizontal * (_playerConfig.speed * Time.deltaTime)), 0, -(_joystick.Vertical * (_playerConfig.speed * Time.deltaTime)));
+                // transform.Translate(moveVector);
+                transform.position += moveVector;
+                Vector3 pos = transform.position;
+                Vector3 direction = Vector3.RotateTowards(transform.forward, moveVector, 5 * Time.deltaTime, 0.0f);
+                transform.localRotation = Quaternion.LookRotation(direction);
+                
+                pos.z = Mathf.Clamp(pos.z, 0f, 45f);;
+                pos.x = Mathf.Clamp(pos.x, -17f, 17f);
+                pos.y = -1f;
+
+                transform.position = pos;
+            }
+            else
+            {
+                animator.Play("Dynamic Idle");
+            }
+
+            
+            
+            // transform.LookAt(new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y), Vector3.up);
+                
             healthBar.fillAmount = health / 100f;
             
             //Temp
@@ -53,6 +86,7 @@ namespace Player
                     //BAD, redo later
                     if (reload <= 0)
                     {
+                        playerState = PlayerStates.Shooting;
                         var bullet = BulletPooler.Instance.GetBullet();
                         bullet.transform.position = transform.position;
                         bullet.LaunchBullet(enemy, _playerConfig.damage);
@@ -69,8 +103,12 @@ namespace Player
         public void TakeDamage(int damage)
         {
             health -= damage;
-            
-            if(health <= 0) Respawn();
+
+            if (health <= 0)
+            {
+                playerState = PlayerStates.Dying;
+                Respawn();
+            }
         }
         
         //TODO: Add separate respawn class to handle  this later
@@ -78,6 +116,28 @@ namespace Player
         {
             health = _playerConfig.health;
             transform.position = respawnPos;
+        }
+
+        private void StateExecution()
+        {
+            switch (playerState)
+            {
+                case PlayerStates.Idle:
+
+                    break;
+                
+                case PlayerStates.Moving:
+
+                    break;
+                
+                case PlayerStates.Shooting:
+
+                    break;
+                
+                case PlayerStates.Dying:
+
+                    break;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ public class ConfigsInstaller : MonoInstaller
     public PlayerConfig playerConfig;
     public EnemyConfig enemyConfig;
     public BulletConfig bulletConfig;
+    public ResourceConfig resourceConfig;
 
     public override void InstallBindings()
     {
@@ -14,5 +15,6 @@ public class ConfigsInstaller : MonoInstaller
         Container.Bind<PlayerConfig>().FromInstance(playerConfig).AsSingle().NonLazy();
         Container.Bind<EnemyConfig>().FromInstance(enemyConfig).AsSingle().NonLazy();
         Container.Bind<BulletConfig>().FromInstance(bulletConfig).AsSingle().NonLazy();
+        Container.Bind<ResourceConfig>().FromInstance(resourceConfig).AsSingle().NonLazy();
     }
 }

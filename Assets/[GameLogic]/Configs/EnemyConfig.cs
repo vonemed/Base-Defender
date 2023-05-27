@@ -16,4 +16,9 @@ public class EnemyConfig : ScriptableObject
 
     public float idleMinTime = 2f;
     public float idleMaxTime = 3f;
+
+    public float wanderOffset = 10f;
+
+    [Header("Spawner")] 
+    public float spawnOffset = 10f;
 }

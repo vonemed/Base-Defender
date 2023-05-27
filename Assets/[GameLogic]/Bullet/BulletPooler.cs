@@ -3,7 +3,7 @@ using Bullet;
 using UnityEngine;
 using Zenject;
 
-public class BulletPooler : MonoBehaviour
+public sealed class BulletPooler : MonoBehaviour
 {
     public static BulletPooler Instance;
 

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speed: 5
-  damage: 5
-  rateOfFire: 0.8
+  damage: 15
+  rateOfFire: 1

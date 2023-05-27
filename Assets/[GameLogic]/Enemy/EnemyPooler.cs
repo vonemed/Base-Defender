@@ -58,15 +58,16 @@ public class EnemyPooler : MonoBehaviour
         return obj.GetComponent<EnemyController>();
     }
     
-    public void SpawnEnemies(int amount)
+    public void SpawnEnemies(int amount, Vector3 spawnPos)
     {
         for (int i = 0; i < amount; i++)
         {
             var enemy = GetEnemy();
-            var randX = Random.Range(-20, 20);
-            var randZ = Random.Range(-20, 20);
+            var randX = Random.Range(-_enemyConfig.spawnOffset, _enemyConfig.spawnOffset);
+            var randZ = Random.Range(-_enemyConfig.spawnOffset, _enemyConfig.spawnOffset);
 
-            enemy.transform.position = new Vector3(randX, 0, randZ);
+            enemy.transform.position = new Vector3(spawnPos.x + randX, 0, spawnPos.z + randZ);
+            enemy.health = _enemyConfig.health;
             enemy.gameObject.SetActive(true);
             
             aliveEnemies.Add(enemy.gameObject);
